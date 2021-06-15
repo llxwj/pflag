@@ -207,6 +207,10 @@ func (rv *RangeValidation) Check(value string) error {
 	}
 }
 
+func NewRangeValidation(min, max uint64) Validation {
+	return &RangeValidation{min:min, max:max}
+}
+
 type RegexValidation struct {
 	pattern string
 }
@@ -222,6 +226,10 @@ func (rv *RegexValidation) Check(value string) error {
 	} else {
 		return nil
 	}
+}
+
+func NewRegexValidation(pattern string) Validation{
+	return &RegexValidation{pattern:pattern}
 }
 
 func (f *Flag) Validation(v Validation) {
