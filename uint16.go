@@ -41,13 +41,13 @@ func (f *FlagSet) GetUint16(name string) (uint16, error) {
 
 // Uint16Var defines a uint flag with specified name, default value, and usage string.
 // The argument p points to a uint variable in which to store the value of the flag.
-func (f *FlagSet) Uint16Var(p *uint16, name string, value uint16, usage string) {
-	f.VarP(newUint16Value(value, p), name, "", usage)
+func (f *FlagSet) Uint16Var(p *uint16, name string, value uint16, usage string) *Flag {
+	return f.VarP(newUint16Value(value, p), name, "", usage)
 }
 
 // Uint16VarP is like Uint16Var, but accepts a shorthand letter that can be used after a single dash.
-func (f *FlagSet) Uint16VarP(p *uint16, name, shorthand string, value uint16, usage string) {
-	f.VarP(newUint16Value(value, p), name, shorthand, usage)
+func (f *FlagSet) Uint16VarP(p *uint16, name, shorthand string, value uint16, usage string) *Flag {
+	return f.VarP(newUint16Value(value, p), name, shorthand, usage)
 }
 
 // Uint16Var defines a uint flag with specified name, default value, and usage string.

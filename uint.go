@@ -41,13 +41,13 @@ func (f *FlagSet) GetUint(name string) (uint, error) {
 
 // UintVar defines a uint flag with specified name, default value, and usage string.
 // The argument p points to a uint variable in which to store the value of the flag.
-func (f *FlagSet) UintVar(p *uint, name string, value uint, usage string) {
-	f.VarP(newUintValue(value, p), name, "", usage)
+func (f *FlagSet) UintVar(p *uint, name string, value uint, usage string) *Flag {
+	return f.VarP(newUintValue(value, p), name, "", usage)
 }
 
 // UintVarP is like UintVar, but accepts a shorthand letter that can be used after a single dash.
-func (f *FlagSet) UintVarP(p *uint, name, shorthand string, value uint, usage string) {
-	f.VarP(newUintValue(value, p), name, shorthand, usage)
+func (f *FlagSet) UintVarP(p *uint, name, shorthand string, value uint, usage string) *Flag {
+	return f.VarP(newUintValue(value, p), name, shorthand, usage)
 }
 
 // UintVar defines a uint flag with specified name, default value, and usage string.

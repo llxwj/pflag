@@ -41,13 +41,13 @@ func (f *FlagSet) GetInt8(name string) (int8, error) {
 
 // Int8Var defines an int8 flag with specified name, default value, and usage string.
 // The argument p points to an int8 variable in which to store the value of the flag.
-func (f *FlagSet) Int8Var(p *int8, name string, value int8, usage string) {
-	f.VarP(newInt8Value(value, p), name, "", usage)
+func (f *FlagSet) Int8Var(p *int8, name string, value int8, usage string) *Flag {
+	return f.VarP(newInt8Value(value, p), name, "", usage)
 }
 
 // Int8VarP is like Int8Var, but accepts a shorthand letter that can be used after a single dash.
-func (f *FlagSet) Int8VarP(p *int8, name, shorthand string, value int8, usage string) {
-	f.VarP(newInt8Value(value, p), name, shorthand, usage)
+func (f *FlagSet) Int8VarP(p *int8, name, shorthand string, value int8, usage string) *Flag {
+	return f.VarP(newInt8Value(value, p), name, shorthand, usage)
 }
 
 // Int8Var defines an int8 flag with specified name, default value, and usage string.

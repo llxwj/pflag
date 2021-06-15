@@ -33,13 +33,13 @@ func (f *FlagSet) GetString(name string) (string, error) {
 
 // StringVar defines a string flag with specified name, default value, and usage string.
 // The argument p points to a string variable in which to store the value of the flag.
-func (f *FlagSet) StringVar(p *string, name string, value string, usage string) {
-	f.VarP(newStringValue(value, p), name, "", usage)
+func (f *FlagSet) StringVar(p *string, name string, value string, usage string) *Flag {
+	return f.VarP(newStringValue(value, p), name, "", usage)
 }
 
 // StringVarP is like StringVar, but accepts a shorthand letter that can be used after a single dash.
-func (f *FlagSet) StringVarP(p *string, name, shorthand string, value string, usage string) {
-	f.VarP(newStringValue(value, p), name, shorthand, usage)
+func (f *FlagSet) StringVarP(p *string, name, shorthand string, value string, usage string) *Flag {
+	return f.VarP(newStringValue(value, p), name, shorthand, usage)
 }
 
 // StringVar defines a string flag with specified name, default value, and usage string.

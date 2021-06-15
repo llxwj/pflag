@@ -105,7 +105,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -180,6 +182,50 @@ type Flag struct {
 	Hidden              bool                // used by cobra.Command to allow flags to be hidden from help/usage text
 	ShorthandDeprecated string              // If the shorthand of this flag is deprecated, this string is the new or now thing to use
 	Annotations         map[string][]string // used by cobra.Command bash autocomple code
+	validation Validation
+}
+
+type Validation interface {
+	Check(value string) error
+}
+
+type RangeValidation struct {
+	min uint64
+	max uint64
+}
+
+func (rv *RangeValidation) Check(value string) error {
+	v, err := strconv.ParseUint(value, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	if v >= rv.min && v<= rv.max {
+		return nil
+	} else {
+		return fmt.Errorf("the legal range is [%d,%d]", rv.min, rv.max)
+	}
+}
+
+type RegexValidation struct {
+	pattern string
+}
+
+func (rv *RegexValidation) Check(value string) error {
+	m, err := regexp.MatchString(rv.pattern, value)
+	if err != nil {
+		return nil
+	}
+
+	if !m {
+		return fmt.Errorf("does not match regular expression:%s", rv.pattern)
+	} else {
+		return nil
+	}
+}
+
+func (f *Flag) Validation(v Validation) {
+	f.validation = v
 }
 
 // Value is the interface to the dynamic value stored in a flag.
@@ -840,8 +886,8 @@ func (f *FlagSet) VarPF(value Value, name, shorthand, usage string) *Flag {
 }
 
 // VarP is like Var, but accepts a shorthand letter that can be used after a single dash.
-func (f *FlagSet) VarP(value Value, name, shorthand, usage string) {
-	f.VarPF(value, name, shorthand, usage)
+func (f *FlagSet) VarP(value Value, name, shorthand, usage string) *Flag{
+	return f.VarPF(value, name, shorthand, usage)
 }
 
 // AddFlag will add the flag to the FlagSet
@@ -1142,6 +1188,12 @@ func (f *FlagSet) Parse(arguments []string) error {
 	f.args = make([]string, 0, len(arguments))
 
 	set := func(flag *Flag, value string) error {
+		if flag.validation != nil {
+			err := flag.validation.Check(value)
+			if err != nil {
+				return err
+			}
+		}
 		return f.Set(flag.Name, value)
 	}
 
